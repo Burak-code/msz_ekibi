@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSZ EKİBİ</title>
+    <style>
+        /* Genel Ayarlar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        /* Arka Plan Fotoğrafı (foto.png) */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('foto.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navigasyon */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: rgba(13, 13, 13, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .nav-logo img {
+            height: 45px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a {
+            cursor: pointer;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+
+        /* Bölümler (Sekmeler) */
+        .section {
+            display: none;
+            padding: 100px 20px;
+            min-height: 80vh;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Bölüm Başlıkları */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #fff;
+            margin: 15px auto 0;
+        }
+
+        /* Hakkımızda */
+        #about {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #about p {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Ekip Şeması */
+        #team .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: #fff;
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        .team-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .team-card p {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-card.manager { border-color: #ff4d4d; }
+        .team-card.ceo { border-color: #4da6ff; }
+        .team-card.employee { border-color: #4dff88; }
+
+        /* İletişim */
+        #contact {
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .contact-btn {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+            color: #fff;
+        }
+
+        .contact-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .contact-btn:hover {
+            background-color: #fff;
+            color: #000;
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Başvuru */
+        #join {
+            text-align: center;
+        }
+
+        .requirements {
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto 50px;
+            text-align: left;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .requirements li {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            position: relative;
+            color: #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 5px;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .requirements li:hover {
+            background-color: #252525;
+        }
+
+        /* Tik ve Çarpı İkonları */
+        .req-icon {
+            font-size: 1.2rem;
+            width: 30px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .requirements li.checked .req-icon {
+            color: #4dff88;
+        }
+
+        .requirements li.unchecked .req-icon {
+            color: #ff4d4d;
+        }
+
+        .requirements li.checked {
+            color: #fff;
+        }
+
+        .join-btn {
+            display: inline-block;
+            background-color: #fff;
+            color: #000;
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .join-btn:hover {
+            background-color: #ccc;
+            box-shadow: 0 0 30px rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #222;
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 50px;
+        }
+
+        /* Mobil Uyum */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                gap: 15px;
+                font-size: 0.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .team-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Arka Plan Fotoğrafı (foto.png) -->
+    <div class="bg-image"></div>
+
+    <!-- Navigasyon -->
+    <nav>
+        <div class="nav-logo">
+            <img src="foto.png" alt="MSZ Logo" onerror="this.src='https://via.placeholder.com/45/000000/FFFFFF?text=MSZ'">
+            <span>MSZ</span>
+        </div>
+        <div class="nav-links">
+            <a onclick="showSection('about')" id="nav-about" class="active">Hakkımızda</a>
+            <a onclick="showSection('team')" id="nav-team">Ekip</a>
+            <a onclick="showSection('contact')" id="nav-contact">İletişim</a>
+            <a onclick="showSection('join')" id="nav-join">Başvuru</a>
+        </div>
+    </nav>
+
+    <!-- Hakkımızda Bölümü -->
+    <section id="about" class="section active">
+        <h2 class="section-title">Hakkımızda</h2>
+        <p>MSZ, <span class="highlight">Mantık, Strateji ve Zeka</span> kelimelerinin baş harflerinden oluşan bir teknoloji ve medya ekibidir.</p>
+        <p>Burak liderliğinde, web geliştirme, oyun tasarımı ve dijital dünyanın her köşesinde yenilikçi projeler üretiyoruz. Son projelerimiz arasında <span class="highlight">CengO</span> ve <span class="highlight">MSZ Media</span> yer alıyor. Ayrıca düzenlediğimiz <span class="highlight">Efootball turnuvaları</span> ile topluluğumuzu bir araya getiriyoruz.</p>
+        <p>Amacımız, sadece kod yazmak değil; aynı zamanda insanlarla iletişim kurmak, eğlenmek ve geleceği birlikte inşa etmek.</p>
+    </section>
+
+    <!-- Ekip Şeması Bölümü -->
+    <section id="team" class="section">
+        <h2 class="section-title">Ekip Şeması</h2>
+        <div class="team-grid">
+            <!-- Burak - Instagram: @burak_msz -->
+            <a href="https://instagram.com/burak_msz" target="_blank" class="team-card manager">
+                <h3>Burak</h3>
+                <p>Kurucu / Müdür</p>
+            </a>
+            <!-- Aşağıdaki kartların href kısmına ilgili kişinin Instagram linkini yazın -->
+            <a href="https://instagram.com/" target="_blank" class="team-card ceo">
+                <h3>İsim Soyisim</h3>
+                <p>CEO</p>
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="team-card employee">
+                <h3>İsim Soyisim</h3>
+                <p>Yazılım Geliştirici</p>
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="team-card employee">
+                <h3>İsim Soyisim</h3>
+                <p>Grafik Tasarımcı</p>
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="team-card employee">
+                <h3>İsim Soyisim</h3>
+                <p>Sosyal Medya Yöneticisi</p>
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="team-card employee">
+                <h3>İsim Soyisim</h3>
+                <p>Oyun Geliştirici</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- İletişim Bölümü -->
+    <section id="contact" class="section">
+        <h2 class="section-title">İletişim</h2>
+        <p>Bize aşağıdaki kanallardan ulaşabilirsiniz.</p>
+        <div class="contact-links">
+            <!-- Instagram -->
+            <a href="https://instagram.com/burak_msz" target="_blank" class="contact-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                Instagram
+            </a>
+            <!-- Gmail -->
+            <a href="https://mail.google.com/mail/u/0/?fs=1&to=burakbilec123@gmail.com&tf=cm" target="_blank" class="contact-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                Gmail
+            </a>
+            <!-- YouTube -->
+            <a href="https://www.youtube.com/@msz-burak" target="_blank" class="contact-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                YouTube
+            </a>
+            <!-- MSZ Medya -->
+            <a href="https://burak-code.github.io/msz-medya/" target="_blank" class="contact-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                MSZ Medya
+            </a>
+        </div>
+    </section>
+
+    <!-- Başvuru Bölümü -->
+    <section id="join" class="section">
+        <h2 class="section-title">Aramıza Katıl</h2>
+        <p style="margin-bottom: 30px; color: #ccc;">MSZ Ekibi büyüyor! Aşağıdaki şartları sağlıyorsan seni de aramızda görmek isteriz. (Onaylamak için tıkla)</p>
+        
+        <ul class="requirements" id="req-list">
+            <li class="unchecked" data-id="req1">
+                <span class="req-icon">❌</span>
+                Bir ekibin içinde iyi geçinip çalışabilmek.
+            </li>
+            <li class="unchecked" data-id="req2">
+                <span class="req-icon">❌</span>
+                Teknoloji ve dijital dünyaya ilgili olmak.
+            </li>
+            <li class="unchecked" data-id="req3">
+                <span class="req-icon">❌</span>
+                En az bir alanda (tasarım, kodlama, medya vb.) yetkinlik sahibi olmak.
+            </li>
+            <li class="unchecked" data-id="req4">
+                <span class="req-icon">❌</span>
+                Zamanında ve disiplinli çalışmak.
+            </li>
+            <li class="unchecked" data-id="req5">
+                <span class="req-icon">❌</span>
+                MSZ vizyonuyla hareket edip birlik içinde olmak.
+            </li>
+            <li class="unchecked" data-id="req6">
+                <span class="req-icon">❌</span>
+                E bi de MSZ Medya'ya üye olmak😁
+            </li>
+        </ul>
+
+        <a href="https://burak-code.github.io/msz-medya/" target="_blank" class="join-btn">
+            MSZ EKİBİNE KATIL
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 MSZ Ekibi. Tüm hakları saklıdır.</p>
+        <p>Mantık • Strateji • Zeka</p>
+    </footer>
+
+    <!-- JavaScript: Sekme Yönetimi ve LocalStorage -->
+    <script>
+        // 1. SEKME YÖNETİMİ
+        function showSection(sectionId) {
+            // Tüm section'ları gizle
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Tüm nav linklerinden active sınıfını kaldır
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // İstenen section'ı göster
+            document.getElementById(sectionId).classList.add('active');
+            // İlgili nav linkini aktif yap
+            document.getElementById('nav-' + sectionId).classList.add('active');
+        }
+
+        // 2. LOCALSTORAGE İLE TİK/ÇARPI YÖNETİMİ
+        document.addEventListener('DOMContentLoaded', () => {
+            const reqItems = document.querySelectorAll('#req-list li');
+
+            // Sayfa yüklendiğinde localStorage'dan durumları oku
+            reqItems.forEach(item => {
+                const id = item.getAttribute('data-id');
+                const savedState = localStorage.getItem('msz_req_' + id);
+
+                if (savedState === 'checked') {
+                    item.classList.remove('unchecked');
+                    item.classList.add('checked');
+                    item.querySelector('.req-icon').textContent = '✅';
+                } else {
+                    item.classList.remove('checked');
+                    item.classList.add('unchecked');
+                    item.querySelector('.req-icon').textContent = '❌';
+                }
+
+                // Tıklama olayını ekle
+                item.addEventListener('click', () => {
+                    const icon = item.querySelector('.req-icon');
+                    if (item.classList.contains('unchecked')) {
+                        // Çarpıdan Tike
+                        item.classList.remove('unchecked');
+                        item.classList.add('checked');
+                        icon.textContent = '✅';
+                        localStorage.setItem('msz_req_' + id, 'checked');
+                    } else {
+                        // Tikten Çarpıya
+                        item.classList.remove('checked');
+                        item.classList.add('unchecked');
+                        icon.textContent = '❌';
+                        localStorage.setItem('msz_req_' + id, 'unchecked');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
